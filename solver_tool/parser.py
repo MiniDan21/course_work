@@ -2,7 +2,7 @@
 import json
 from typing import Dict, Optional, List, Generator
 
-from solver_tool import Node, Graph
+from .graph import Node, Graph
 
 
 class NodeEncoder(json.JSONEncoder):
