@@ -14,7 +14,7 @@ class ShortestWay(Solver):
                 nodeS = graph.nodes[nodeS]
                 nodeT = graph.nodes[nodeT]
             except KeyError:
-                return [[], inf]
+                return [[], None]
         if nodeS is nodeT:
             return [[nodeS], 0] 
         routes = self.defind_ways(nodeS, nodeT)
@@ -30,5 +30,6 @@ class ShortestWay(Solver):
                 shortest_ways = [route]
             elif summary == temp:
                 shortest_ways.append(route)
-
+        if summary is inf:
+            summary = None
         return [shortest_ways, summary]

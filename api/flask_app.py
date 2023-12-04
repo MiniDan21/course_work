@@ -16,6 +16,9 @@ def index():
 @cross_origin()
 def index_post():
     nodes, directed, weighted, task = Parser.json_to_obj(request.json)
+    # Принебрегаем ориентированностью, если планарность
+    if task["type"] == "planarity":
+        directed = False
     graph = GraphBuidler.build(nodes=nodes, directed_graph=directed, weighted_graph=weighted)
     solver = SolverBuidler.build(task['type'])
     extra = dict()
@@ -25,7 +28,6 @@ def index_post():
         del task['type']
         extra = task
     return Parser.obj_to_json(solver.solve(graph, **extra))
-    return 'true'
 
 
 app.run()

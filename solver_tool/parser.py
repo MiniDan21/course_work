@@ -38,12 +38,15 @@ class Parser:
                         obj_data[node].update({adject_node: weight} or {})        
                 except AttributeError:
                     pass
+
         return obj_data, directed, weighted, json_data.get('task')
     
 
     @staticmethod
     def obj_to_json(obj) -> bytes:
-        res = list(obj)
+        res = obj
+        if not type(obj) is bool:
+            res = list(obj)
         # if isinstance(obj, Generator):
         #     res = list(obj)
         return json.dumps(res, cls=NodeEncoder)

@@ -1,3 +1,6 @@
 **/__pycache__
 .venv/
 api.service
+course_api.service
+test.py
+temp.log

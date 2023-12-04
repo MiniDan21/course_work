@@ -2,6 +2,7 @@ from .graph import Node, GraphBuidler, Graph
 from .components import Components
 from .art_points import ArtPoints
 from .shortest_way import ShortestWay
+from .planarity import Planarity
 from .rules import Rules
 from .parser import Parser
 
@@ -15,6 +16,6 @@ class SolverBuidler:
             case Rules.ART_POINTS:
                 return ArtPoints()
             case Rules.PLANARITY:
-                return
+                return Planarity()
             case Rules.SHORTEST_WAY:
                 return ShortestWay()
