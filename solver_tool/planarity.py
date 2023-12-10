@@ -12,9 +12,11 @@ class Planarity(Solver):
     def solve(self, graph: Graph, *args, **kwargs):
         planarited = True
         while len(graph.info()) > 4:
-            if self.define_K_3_3(graph):
-                planarited = False
-                break
+            if len(graph.info()) == 6:
+                # Основано на авторском алгоритме, где из 6 вершин находится подграф К3,3
+                if self.define_K_3_3(graph):
+                    planarited = False
+                    break
             elif self.define_K_5(graph):
                 planarited = False
                 break
@@ -33,15 +35,41 @@ class Planarity(Solver):
             return False
         left = set()
         right = set()
+        # Если у кого-то 5 вершин, то по сути он со всеми связан, неважно в какую долю его запихивать, пока других не распределим
+        five_edges = set()
         for node in graph.info().keys():
-            if len(node.adjects) != 3:
+            if len(node.adjects) < 3:
                 return False
+            
             if node.name in left or node.name in right:
                 continue
+
+            if len(node.adjects) == 5:
+                five_edges.add(node.name)
+                continue
             left.add(node.name)
-            [right.add(n.name) for n in node.adjects.keys() if n.name not in right]
+            for n in node.adjects.keys():
+                if n.name not in right and len(n.adjects) != 5:
+                    right.add(n.name)
+                elif len(n.adjects) == 5:
+                    five_edges.add(n.name)
+
+        for five in five_edges:
+            if five not in right and five not in left:
+                min(left, right, key=len).add(five)
         if len(left) != 3 or len(right) != 3:
             return False
+        
+        # Проверка на то, что все вершины из противоположной доли являются смежными текущей вершине
+        for node in graph.info().keys():
+            adjects = set(node.adjects.keys())
+            result = set()
+            if node in left:
+                result = right - adjects
+            if node in right:
+                result = left - adjects
+            if len(result) > 0:
+                return False
         return True
     
     def define_K_5(self, graph: Graph) -> bool:
