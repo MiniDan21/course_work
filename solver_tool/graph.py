@@ -71,7 +71,7 @@ class Graph:
             return True
         return False
     
-    def define_minimal_adjects_count(self) -> List[Node | None]:
+    def define_minimal_adject(self):
         min_nodes = []
         minimum = inf
         for node, adjects in self.info().items():
@@ -81,7 +81,20 @@ class Graph:
             elif l < minimum:
                 min_nodes = [node]
                 minimum = l
-        return min_nodes
+
+
+        minimum_edge = None
+        minimum_of_node = inf
+        # Проходимся по минимальным вершинами и ищем минимальные потери стягивания ребер
+        for node in min_nodes:
+            adjects = set(node.adjects.keys()) | set(node._reverse_adjects)
+            for adject in adjects:
+                lose = len(set(adject.adjects) & adjects) + 1
+                if lose < minimum_of_node:
+                    minimum_edge = (node, adject)
+                    minimum_of_node = lose
+
+        return minimum_of_node, minimum_edge or min_nodes[-1]
 
     def tight_edge(self, first: Node, second: Node) -> bool:
         '''Удаляется first, стягиваясь с second'''

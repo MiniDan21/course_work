@@ -19,13 +19,10 @@ class Solver(ABC):
             routes = []
         else:
             route = route + (nodeS,)
-        # print(nodeS, nodeS.adjects, nodeT, route)
         if nodeS is nodeT:
-            # print('Конец')
             return route
         
         if not nodeS.adjects:
-            # print('Пук пук')
             return []
         temp_routes = []
         for adject in nodeS.adjects:
@@ -36,15 +33,12 @@ class Solver(ABC):
                     else:
                         temp_routes.append(res)
             if first and temp_routes:
-                # print('Добавлен')
                 for r in temp_routes:
                     routes.append(r)
                 temp_routes = []
 
         if first:
-            # print('Возвращен итог')
             return routes
-        # print('Возвращен промежуток')
         return temp_routes
 
     def direct_transitive_closure(self, node: Node, t=None) -> Optional[Set[Node] | None]:
@@ -54,11 +48,9 @@ class Solver(ABC):
         if node in t:
             return t
         t.add(node)
-        # print(node, t)
         res = t
         for n in node.adjects:
             res |= self.direct_transitive_closure(n, t)
-        # print(node, res)
         return res or None
     
     def reverse_transitive_closure(self, node: Node, t=None) -> Optional[Set[Node] | None]:

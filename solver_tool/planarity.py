@@ -4,11 +4,6 @@ from .graph import *
 
 # Укладка графа на плоскости (определить способ определения для класса Graph)
 class Planarity(Solver):
-    def __init__(self) -> None:
-        super().__init__()
-        self.vertex_degree_gt_3 = []
-        self.vertex_degree_gt_2 = []
-        self.visited = []
     def solve(self, graph: Graph, *args, **kwargs):
         planarited = True
         while len(graph.info()) > 4:
@@ -22,11 +17,11 @@ class Planarity(Solver):
                 break
 
             # ИСПРАВИТЬ КОСТЫЛЬ ДЛЯ ДВУДОЛЬНЫХ ГРАФОВ
-            node = graph.define_minimal_adjects_count()[-1]
-            if len(node.adjects) == 0:
-                graph._del_node(node)
+            value, edge = graph.define_minimal_adject()
+            if value is inf:
+                graph._del_node(edge)
             else:                    
-                graph.tight_edge(node, node._random_adject())
+                graph.tight_edge(edge[0], edge[1])
 
         return planarited
 
@@ -62,11 +57,11 @@ class Planarity(Solver):
         
         # Проверка на то, что все вершины из противоположной доли являются смежными текущей вершине
         for node in graph.info().keys():
-            adjects = set(node.adjects.keys())
+            adjects = set(i.name for i in node.adjects.keys())
             result = set()
-            if node in left:
+            if node.name in left:
                 result = right - adjects
-            if node in right:
+            if node.name in right:
                 result = left - adjects
             if len(result) > 0:
                 return False
