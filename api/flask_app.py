@@ -30,4 +30,4 @@ def index_post():
     return Parser.obj_to_json(solver.solve(graph, **extra))
 
 
-app.run()
+# app.run()

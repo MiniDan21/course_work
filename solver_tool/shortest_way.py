@@ -58,7 +58,9 @@ class ShortestWay(Solver):
         freeze_dist = deepcopy(dist) 
         predecessors = {node: set() for node in graph.nodes}
         dist[nodeS.name] = 0
-
+        result = {}
+        if not edges:
+            return {i: ("Error: Некорректно указан вес", False) for i in predecessors}
         for _ in range(len(graph.nodes) - 1):
             for u, v, w in edges:
                 if dist[u] != inf and dist[u] + w <= dist[v]:
@@ -73,7 +75,7 @@ class ShortestWay(Solver):
               if dist[u] != inf and dist[u] + w < dist[v]:
                 return {i: ("Error: Отрицательная петля", False) for i in dist}
         
-        result = {}
+        
         # print(predecessors)
         for node, distance in dist.items():
             if predecessors[node] is not None:
@@ -90,7 +92,8 @@ class ShortestWay(Solver):
         data = graph.info()
         for v in data:
             for u, w in data[v].items():
-                result.append([v.name, u.name, data[v][u]])
+                if type(w) is int or type(w) is float:
+                    result.append([v.name, u.name, data[v][u]])
         
         return result
     
